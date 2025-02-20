@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { PersistenceModule } from './infra/persistence/persistence.module';
+import { UserAuthModule } from './application/user-auth.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [
+    PersistenceModule.forRoot(),
+    UserAuthModule
+  ],
 })
 export class AppModule {}
