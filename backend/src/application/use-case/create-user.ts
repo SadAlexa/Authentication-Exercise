@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Inject, Injectable } from "@nestjs/common";
 import { UserRepository } from "../ports/user.reporitory";
 import { User } from "src/domain/authentication/user";
 
@@ -15,7 +15,7 @@ interface CreateUserCommand {
 @Injectable()
 export class CreateUserUseCase {
     constructor(
-        private readonly userRepository: UserRepository 
+        @Inject(UserRepository) private readonly userRepository: UserRepository 
     ) {}
 
     async execute({
