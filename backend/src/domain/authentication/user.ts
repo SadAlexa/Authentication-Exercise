@@ -1,10 +1,10 @@
 import { Entity } from "src/core/entities/entity";
 
 export interface UserProps {
-    id: string;
+    id?: number;
     name: string;
     surname: string;
-    birthdate: Date;
+  /*   birthdate: Date; */
     image: string;
     email: string;
     password: string;
@@ -12,10 +12,10 @@ export interface UserProps {
 }
 
 export class User extends Entity<UserProps>{
-  private id: string;
+  private id?: number;
   private name: string;
   private surname: string;
-  private birthdate: Date;
+ /*  private birthdate: Date; */
   private image: string;
   private email: string;
   private password: string;
@@ -23,10 +23,14 @@ export class User extends Entity<UserProps>{
 
   constructor(props: UserProps) {
     super(props);
-  }
-
-  getId(): string {
-    return this.id;
+    this.id = props.id;
+    this.name = props.name;
+    this.surname = props.surname;
+    /* this.birthdate = props.birthdate; */
+    this.image = props.image;
+    this.email = props.email;
+    this.password = props.password;
+    /* this.salt = props.salt; */
   }
 
   getName(): string {
@@ -41,10 +45,10 @@ export class User extends Entity<UserProps>{
     return this.email;
   }
 
-  getBirthdate(): Date {
+/*   getBirthdate(): Date {
     return this.birthdate;
   }
-
+ */
   getImage(): string {
     return this.image;
   }

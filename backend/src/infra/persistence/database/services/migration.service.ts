@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { migrate } from 'drizzle-orm/postgres-js/migrator';
-import { InjectDrizzle } from '../utils';
+import { InjectDrizzle } from '../../utils';
 import { DrizzleDatabase } from '../database.module';
 
 @Injectable()

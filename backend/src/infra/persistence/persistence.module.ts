@@ -1,11 +1,17 @@
 import { DynamicModule, Module } from "@nestjs/common";
+import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule} from "./database/database.module";
 import { UserRepository } from "src/application/ports/user.reporitory";
 import { UserRepositoryImpl } from "./database/repositories/drizzle-user.repository";
 
 @Module({
   imports: [
-        DatabaseModule.forRoot(process.env.DATABASE_URL!),
+    //TODO
+    ConfigModule.forRoot( {
+      isGlobal: true,
+      envFilePath: '.env',
+    }),
+    DatabaseModule.forRoot(process.env.DATABASE_URL!),
     ],
   providers: [
     {
@@ -20,7 +26,7 @@ export class PersistenceModule {
         return {
             module: PersistenceModule,
             imports: [
-                DatabaseModule.forRoot(process.env.DATABASE_URL!),
+                DatabaseModule,
             ],
         };
     }

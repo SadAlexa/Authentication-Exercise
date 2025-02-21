@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { DB_INJECTION_KEY } from './utils';
+import { DB_INJECTION_KEY } from '../utils';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import * as schema from './entities/index';
 import { Migrator } from './services/migration.service';

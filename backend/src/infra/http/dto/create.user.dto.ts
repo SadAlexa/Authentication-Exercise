@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
     IsDate,
+    IsDateString,
     IsEmail,
     IsNotEmpty,
     IsString,
@@ -11,11 +12,6 @@ export class CreateUserDto {
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
-    id: string;
-
-    @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
     name: string;
 
     @ApiProperty()
@@ -23,11 +19,11 @@ export class CreateUserDto {
     @IsNotEmpty()
     surname: string;
 
-    @ApiProperty()
-    @IsDate()
+ /*    @ApiProperty()
+    @IsDateString()
     @IsNotEmpty()
     birthdate: Date;
-
+ */
     @ApiProperty()
     @IsString()
     @IsNotEmpty()
