@@ -6,7 +6,6 @@ import { UserRepositoryImpl } from "./database/repositories/drizzle-user.reposit
 
 @Module({
   imports: [
-    //TODO
     ConfigModule.forRoot( {
       isGlobal: true,
       envFilePath: '.env',

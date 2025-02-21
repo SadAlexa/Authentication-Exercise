@@ -4,7 +4,7 @@ import { CreateUserUseCase } from "src/application/use-case/create-user";
 import { GetUserUseCase } from "src/application/use-case/get-user";
 import { CreateUserDto } from "./dto/create.user.dto";
 
-@Controller('/user')
+@Controller('/')
 @ApiTags('User')
 export class UserController {
     constructor(
@@ -12,14 +12,15 @@ export class UserController {
         private getUserUseCase: GetUserUseCase
     ) {}
 
-    @Get('')
+    @Post('/login')
     getUser( email: string, password: string) {
         return this.getUserUseCase.execute({email, password});
     }
 
-    @Post('')
+    @Post('/register')
     createUser(@Body() createUserDto: CreateUserDto) {
         return this.createUserUseCase.execute(createUserDto);
     }
 
 }
+

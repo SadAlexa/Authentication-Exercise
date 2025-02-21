@@ -16,7 +16,7 @@ export class User extends Entity<UserProps>{
   private name: string;
   private surname: string;
  /*  private birthdate: Date; */
-  private image: string;
+  private image?: string;
   private email: string;
   private password: string;
   /* private salt: string; */
@@ -49,9 +49,9 @@ export class User extends Entity<UserProps>{
     return this.birthdate;
   }
  */
-  getImage(): string {
+/*   getImage(): string {
     return this.image;
-  }
+  } */
 
   getPassword(): string {
     return this.password;

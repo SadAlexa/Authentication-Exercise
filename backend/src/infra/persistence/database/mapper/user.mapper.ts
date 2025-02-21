@@ -26,7 +26,7 @@ export class UserMapper {
         /* birthdate: user.getBirthdate()}`, */
         password: user.getPassword(),
         /* salt: user.getSalt()}`, */
-        image: user.getImage(),
+        /* image: user.getImage(), */
       }
     }
 }

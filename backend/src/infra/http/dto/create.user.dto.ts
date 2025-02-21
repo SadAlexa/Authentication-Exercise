@@ -4,6 +4,7 @@ import {
     IsDateString,
     IsEmail,
     IsNotEmpty,
+    IsOptional,
     IsString,
     IsStrongPassword
 } from 'class-validator';
@@ -25,8 +26,7 @@ export class CreateUserDto {
     birthdate: Date;
  */
     @ApiProperty()
-    @IsString()
-    @IsNotEmpty()
+    @IsOptional()
     image: string;
 
     @ApiProperty()

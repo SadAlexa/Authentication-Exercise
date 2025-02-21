@@ -1,19 +1,8 @@
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
 import { useState } from "react"
-
-const registerSchema = yup.object({
-    name: yup.string().required(),
-    surname: yup.string().required(),
-    email: yup.string().email().required(),
-    dateOfBirth: yup.date().required(),
-    image: yup.string().required(),
-    password: yup.string().required(),
-    confirmPassword: yup.string()
-        .oneOf([yup.ref('password')], 'Passwords do not match!')
-        .required(),
-}).required()
+import { useAuth } from "../../hooks/useAuth"
+import { registerSchema } from "../../../validation/RegisterSchema"
 
 const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
     const {
@@ -32,10 +21,18 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    // TODO
+    const { register: authRegister } = useAuth();
+
     const onSubmit = (data: any) => {
         console.log(data)
-        onSuccess()
+
+        try {
+            authRegister(name, surname, email,/*  image, */ password).then(() => {
+                onSuccess();
+            });
+        } catch (error) {
+            console.error('Registration failed:', error);
+        }
     }
 
     return (

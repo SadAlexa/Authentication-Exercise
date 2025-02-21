@@ -1,13 +1,8 @@
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
-import * as yup from "yup"
 import { useState } from "react";
-
-const loginSchema = yup.object({
-    email: yup.string().email().required(),
-    password: yup.string().required(),
-}).required()
-
+import { useAuth } from "../../hooks/useAuth";
+import { loginSchema } from "../../../validation/LoginSchema";
 
 const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
     const [email, setEmail] = useState('');
@@ -20,9 +15,17 @@ const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
         resolver: yupResolver(loginSchema),
     })
 
+    const { login: authLogin } = useAuth();
+
     const onSubmit = (data: any) => {
         console.log(data)
-        onSuccess()
+        try {
+            authLogin(email, password).then(() => {
+                onSuccess();
+            })
+        } catch (error) {
+            console.error('Login failed:', error);
+        }
     }
 
     return (
@@ -41,7 +44,6 @@ const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
             <button type="submit">Login</button>
         </form>
     )
-   return "aaaaaa"
 } 
 
 

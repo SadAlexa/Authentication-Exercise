@@ -1,4 +1,4 @@
-import RegisterForm from "../../app/components/auth/RegisterForm"
+import RegisterForm from "../components/auth/RegisterForm"
 
 export function RegisterPage({ onSuccess }: { onSuccess: () => void }) {
     return (
