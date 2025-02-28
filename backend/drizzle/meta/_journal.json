@@ -8,6 +8,13 @@
       "when": 1740127645675,
       "tag": "0000_yellow_thor_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1740413014388,
+      "tag": "0001_lethal_boom_boom",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../application/hooks/useAuth";
 import { registerSchema } from "../../../validation/RegisterSchema";
 
 const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
@@ -20,7 +20,6 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
     email: string;
     password: string;
   }) => {
-    console.log(data);
     try {
       authRegister(
         data.name,

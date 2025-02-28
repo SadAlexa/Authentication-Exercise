@@ -1,25 +1,25 @@
-import { Entity } from "src/core/entities/entity";
+import { Entity } from 'src/core/entities/entity';
 
 export interface UserProps {
-    id?: number;
-    name: string;
-    surname: string;
+  id?: number;
+  name: string;
+  surname: string;
   /*   birthdate: Date; */
-    image: string;
-    email: string;
-    password: string;
-    /* salt: string; */
+  image: string;
+  email: string;
+  password: string;
+  salt: string;
 }
 
-export class User extends Entity<UserProps>{
+export class User extends Entity<UserProps> {
   private id?: number;
   private name: string;
   private surname: string;
- /*  private birthdate: Date; */
+  /*  private birthdate: Date; */
   private image?: string;
   private email: string;
   private password: string;
-  /* private salt: string; */
+  private salt: string;
 
   constructor(props: UserProps) {
     super(props);
@@ -30,7 +30,7 @@ export class User extends Entity<UserProps>{
     this.image = props.image;
     this.email = props.email;
     this.password = props.password;
-    /* this.salt = props.salt; */
+    this.salt = props.salt;
   }
 
   getName(): string {
@@ -45,11 +45,11 @@ export class User extends Entity<UserProps>{
     return this.email;
   }
 
-/*   getBirthdate(): Date {
+  /*   getBirthdate(): Date {
     return this.birthdate;
   }
  */
-/*   getImage(): string {
+  /*   getImage(): string {
     return this.image;
   } */
 
@@ -57,9 +57,9 @@ export class User extends Entity<UserProps>{
     return this.password;
   }
 
- /*  getSalt(): string {
+  getSalt(): string {
     return this.salt;
-  } */
+  }
 
   checkEmail(email: string): boolean {
     return this.email === email;
@@ -81,4 +81,3 @@ export class User extends Entity<UserProps>{
     this.password = password;
   }
 }
-

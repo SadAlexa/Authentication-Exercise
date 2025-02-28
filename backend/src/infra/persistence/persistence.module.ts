@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './database/database.module';
 import { UserRepository } from 'src/application/ports/user.reporitory';
 import { UserRepositoryImpl } from './database/repositories/drizzle-user.repository';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -11,6 +12,11 @@ import { UserRepositoryImpl } from './database/repositories/drizzle-user.reposit
       envFilePath: '.env',
     }),
     DatabaseModule.forRoot(process.env.DATABASE_URL!),
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '60s' },
+    }),
   ],
   providers: [
     {

@@ -9,6 +9,7 @@ interface CreateUserCommand {
   image: string;
   email: string;
   password: string;
+  salt: string;
 }
 
 @Injectable()
@@ -24,6 +25,7 @@ export class CreateUserUseCase {
     image,
     email,
     password,
+    salt,
   }: CreateUserCommand): Promise<any> {
     const user = new User({
       name,
@@ -32,6 +34,7 @@ export class CreateUserUseCase {
       image,
       email,
       password,
+      salt,
     });
 
     const response = await this.userRepository.create(user);

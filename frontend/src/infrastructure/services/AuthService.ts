@@ -1,6 +1,6 @@
 import { AuthenticateUser } from "../../application/use-case/AuthenticateUser";
 import { RegisterUser } from "../../application/use-case/RegisterUser";
-import { User } from "../entities/User";
+import { User } from "../../domain/entities/User";
 
 export class AuthService {
   private authenticateUserUseCase: AuthenticateUser;
@@ -14,10 +14,18 @@ export class AuthService {
     this.registerUserUseCase = registerUserUseCase;
   }
 
-  async login(email: string, password: string): Promise<User> {
+  async login(
+    email: string,
+    password: string
+  ): Promise<{ accessToken: string; user: User }> {
     const user = await this.authenticateUserUseCase.execute(email, password);
-    this.storeToken(user);
-    return user;
+    if (user.accessToken) {
+      this.storeToken(user.accessToken);
+    }
+    return {
+      accessToken: user.accessToken,
+      user: user.user,
+    };
   }
 
   async register(
@@ -37,16 +45,19 @@ export class AuthService {
     );
   }
 
-  logout(): void {
-    localStorage.removeItem("authToken");
+  async logout(): Promise<void> {
+    await this.authenticateUserUseCase.execute("", "");
   }
 
   isAuthenticated(): boolean {
-    const token = localStorage.getItem("authToken");
+    const token = document.cookie
+      .split(";")
+      .find((c) => c.trim().startsWith("authToken="))
+      ?.split("=")[1];
     return !!token;
   }
 
-  private storeToken(user: User): void {
-    localStorage.setItem("authToken", user.token || "");
+  private storeToken(accessToken: string): void {
+    document.cookie = `authToken=${accessToken}; path=/;`;
   }
 }

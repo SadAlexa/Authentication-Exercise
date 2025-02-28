@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "../../hooks/useAuth";
+import { useAuth } from "../../../application/hooks/useAuth";
 import { loginSchema } from "../../../validation/LoginSchema";
 
 const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
@@ -15,7 +15,6 @@ const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const { login: authLogin } = useAuth();
 
   const onSubmit = (data: { email: string; password: string }) => {
-    console.log(data);
     try {
       authLogin(data.email, data.password).then((isLogged: boolean) => {
         if (isLogged) {

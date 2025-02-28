@@ -13,19 +13,19 @@ export class UserMapper {
       /* birthdate: new Date(userEntity.birthdate), */
       image: userEntity.image ? userEntity.image : '',
       password: userEntity.password,
-      /* salt: userEntity.salt, */
+      salt: userEntity.salt,
     });
     return model;
   }
 
-  static toDatabase(user: User) {
+  static toDatabase(user: User, hashedPassword?: string, salt?: string) {
     return {
       name: user.getName(),
       surname: user.getSurname(),
       email: user.getEmail(),
       /* birthdate: user.getBirthdate()}`, */
-      password: user.getPassword(),
-      /* salt: user.getSalt()}`, */
+      password: hashedPassword ? hashedPassword : user.getPassword(),
+      salt: salt ? salt : user.getSalt(),
       /* image: user.getImage(), */
     };
   }

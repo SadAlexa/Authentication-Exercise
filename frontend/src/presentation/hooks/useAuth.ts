@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { UserRepistoryIml } from "../../infrastructure/repositories/UserRepositoryImpl";
-import { User } from "../../domain/entities/User";
 import { AuthService } from "../../domain/services/AuthService";
 import { AuthenticateUser } from "../../application/use-case/AuthenticateUser";
 import { RegisterUser } from "../../application/use-case/RegisterUser";
@@ -12,15 +11,15 @@ const authService = new AuthService(
 );
 
 export const useAuth = () => {
-  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<{ accessToken: string } | null>(null);
 
   const login = async (
     username: string,
     password: string
   ): Promise<boolean> => {
     try {
-      const loggedInUser = await authService.login(username, password);
-      setUser(loggedInUser);
+      const loggedUser = await authService.login(username, password);
+      setToken(loggedUser);
     } catch (error) {
       console.error("Login failed:", error);
       return false;
@@ -45,12 +44,12 @@ export const useAuth = () => {
 
   const logout = () => {
     authService.logout();
-    setUser(null);
+    setToken(null);
   };
 
   const isAuthenticated = () => {
     return authService.isAuthenticated();
   };
 
-  return { user, login, register, logout, isAuthenticated };
+  return { token, login, register, logout, isAuthenticated };
 };
