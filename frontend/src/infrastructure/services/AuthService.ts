@@ -1,6 +1,5 @@
 import { AuthenticateUser } from "../../application/use-case/AuthenticateUser";
 import { RegisterUser } from "../../application/use-case/RegisterUser";
-import { User } from "../../domain/entities/User";
 
 export class AuthService {
   private authenticateUserUseCase: AuthenticateUser;
@@ -14,18 +13,8 @@ export class AuthService {
     this.registerUserUseCase = registerUserUseCase;
   }
 
-  async login(
-    email: string,
-    password: string
-  ): Promise<{ accessToken: string; user: User }> {
-    const user = await this.authenticateUserUseCase.execute(email, password);
-    if (user.accessToken) {
-      this.storeToken(user.accessToken);
-    }
-    return {
-      accessToken: user.accessToken,
-      user: user.user,
-    };
+  async login(email: string, password: string): Promise<void> {
+    await this.authenticateUserUseCase.execute(email, password);
   }
 
   async register(

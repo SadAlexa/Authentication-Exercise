@@ -11,13 +11,8 @@ export class UserRepistoryIml implements UserRepistory {
   async logout(): Promise<void> {
     return this.authApi.logout();
   }
-  async authenticate(
-    email: string,
-    password: string
-  ): Promise<{ accessToken: string; user: User }> {
-    const response = await this.authApi.login(email, password);
-    const userData = await response.json();
-    return { accessToken: userData.accessToken, user: userData.user };
+  async authenticate(email: string, password: string): Promise<void> {
+    await this.authApi.login(email, password);
   }
 
   async register(user: User): Promise<void> {

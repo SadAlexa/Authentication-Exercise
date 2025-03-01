@@ -28,7 +28,7 @@ export class UserController {
   getUser(
     @Body() getUserDto: GetUserDto,
     @Res() res: Response,
-  ): Promise<{ accessToken: string }> {
+  ): Promise<Response> {
     return this.getUserUseCase.execute(getUserDto, res);
   }
 

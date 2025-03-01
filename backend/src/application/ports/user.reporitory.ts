@@ -5,5 +5,5 @@ export abstract class UserRepository {
   abstract findByEmailAndPassword(
     email: string,
     password: string,
-  ): Promise<{ accessToken: string; user: User }>;
+  ): Promise<{ accessToken: string }>;
 }

@@ -9,6 +9,11 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { eq } from 'drizzle-orm';
 
+interface JwtPayload {
+  email: string;
+  password: string;
+}
+
 @Injectable()
 export class UserRepositoryImpl implements UserRepository {
   constructor(
@@ -22,20 +27,28 @@ export class UserRepositoryImpl implements UserRepository {
       .insert(usersTable)
       .values(UserMapper.toDatabase(user, hashedPassword, salt));
   }
+
   async findByEmailAndPassword(
     email: string,
     password: string,
-  ): Promise<{ accessToken: string; user: User }> {
+  ): Promise<{ accessToken: string }> {
     const user = await this.db.query.usersTable.findFirst({
       where: eq(usersTable.email, email),
     });
     if (user && (await bcrypt.compare(password + user.salt, user.password))) {
-      const payload = { email: user.email, password: user.password };
+      const payload: JwtPayload = {
+        email: user.email,
+        password: user.password,
+      };
       return {
         accessToken: await this.jwtService.signAsync(payload),
-        user: UserMapper.toDomain(user),
       };
     }
     throw new UnauthorizedException();
+  }
+
+  async verifyToken(token: string): Promise<JwtPayload> {
+    const payload: JwtPayload = await this.jwtService.verifyAsync(token);
+    return payload;
   }
 }

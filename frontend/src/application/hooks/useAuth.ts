@@ -3,7 +3,6 @@ import { AuthService } from "../../infrastructure/services/AuthService";
 import { UserRepistoryIml } from "../../infrastructure/repositories/UserRepositoryImpl";
 import { AuthenticateUser } from "../use-case/AuthenticateUser";
 import { RegisterUser } from "../use-case/RegisterUser";
-import { User } from "../../domain/entities/User";
 
 export const useAuth = () => {
   const userRepistory = new UserRepistoryIml();
@@ -12,15 +11,11 @@ export const useAuth = () => {
     new RegisterUser(userRepistory)
   );
 
-  const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState(null);
-  const [accessToken, setAccessToken] = useState<string>();
 
   const login = async (email: string, password: string): Promise<void> => {
     try {
-      const response = await authService.login(email, password);
-      setUser(response.user);
-      setAccessToken(response.accessToken);
+      await authService.login(email, password);
       setError(null);
     } catch (err: any) {
       setError(err.message);
@@ -30,8 +25,6 @@ export const useAuth = () => {
   const logout = async () => {
     try {
       await authService.logout();
-      setUser(null);
-      setAccessToken("");
       setError(null);
     } catch (err: any) {
       setError(err.message);
@@ -58,9 +51,7 @@ export const useAuth = () => {
   };
 
   return {
-    user,
     error,
-    accessToken,
     login,
     logout,
     register,
