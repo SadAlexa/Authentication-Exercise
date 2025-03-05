@@ -17,8 +17,7 @@ const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
 
   const onSubmit = (data: { email: string; password: string }) => {
     try {
-      authLogin(data.email, data.password);
-      onSuccess();
+      authLogin(data.email, data.password).then(() => onSuccess());
     } catch (error) {
       console.error("Login failed:", error);
     }

@@ -1,5 +1,7 @@
+import { User } from "../../domain/entities/User";
+
 export class AuthApi {
-  async login(email: string, password: string): Promise<Response> {
+  async login(email: string, password: string): Promise<{ authToken: string }> {
     const response = await fetch("http://localhost:3000/login", {
       method: "POST",
       headers: {
@@ -11,7 +13,23 @@ export class AuthApi {
     if (!response.ok) {
       throw new Error("Login failed");
     }
-    return response;
+    return response.json();
+  }
+
+  async fethUserData(authToken: string): Promise<User | undefined> {
+    const response = await fetch("http://localhost:3000/profile", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      console.log(response);
+      throw new Error("User not found");
+    }
+    return await response.json();
   }
 
   async register(

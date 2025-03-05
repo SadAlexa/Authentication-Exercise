@@ -1,24 +1,38 @@
 import { AuthenticateUser } from "../../application/use-case/AuthenticateUser";
+import { GetUser } from "../../application/use-case/GetUser";
 import { LogOutUser } from "../../application/use-case/LogOutUser";
 import { RegisterUser } from "../../application/use-case/RegisterUser";
+import { User } from "../../domain/entities/User";
 
 export class AuthService {
   private authenticateUserUseCase: AuthenticateUser;
   private registerUserUseCase: RegisterUser;
   private logoutUserUseCase: LogOutUser;
+  private getUserUseCase: GetUser;
 
   constructor(
     authenticateUserUseCase: AuthenticateUser,
     registerUserUseCase: RegisterUser,
-    logoutUserUseCase: LogOutUser
+    logoutUserUseCase: LogOutUser,
+    getUserUseCase: GetUser
   ) {
     this.authenticateUserUseCase = authenticateUserUseCase;
     this.registerUserUseCase = registerUserUseCase;
     this.logoutUserUseCase = logoutUserUseCase;
+    this.getUserUseCase = getUserUseCase;
   }
 
-  async login(email: string, password: string): Promise<void> {
-    await this.authenticateUserUseCase.execute(email, password);
+  async login(
+    email: string,
+    password: string
+  ): Promise<{
+    authToken: string;
+  }> {
+    return await this.authenticateUserUseCase.execute(email, password);
+  }
+
+  async getUser(authToken: string): Promise<User | undefined> {
+    return await this.getUserUseCase.execute(authToken);
   }
 
   async register(

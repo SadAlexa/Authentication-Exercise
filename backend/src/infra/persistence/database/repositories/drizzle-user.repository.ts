@@ -6,7 +6,7 @@ import { DrizzleDatabase } from '../database.module';
 import { UserMapper } from '../mapper/user.mapper';
 import { DB_INJECTION_KEY } from '../../utils';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
+import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import { eq } from 'drizzle-orm';
 
 interface JwtPayload {
@@ -20,6 +20,15 @@ export class UserRepositoryImpl implements UserRepository {
     @Inject(DB_INJECTION_KEY) private readonly db: DrizzleDatabase,
     private jwtService: JwtService,
   ) {}
+  async findById(id: number): Promise<User | undefined> {
+    const user = await this.db.query.usersTable.findFirst({
+      where: eq(usersTable.id, id),
+    });
+    return user ? UserMapper.toDomain(user) : undefined;
+  }
+  async logoutUser(token: string): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
   async create(user: User) {
     const salt = Math.random().toString(36).substring(2, 15);
     const hashedPassword = await bcrypt.hash(user.getPassword() + salt, 10);
@@ -48,7 +57,17 @@ export class UserRepositoryImpl implements UserRepository {
   }
 
   async verifyToken(token: string): Promise<JwtPayload> {
-    const payload: JwtPayload = await this.jwtService.verifyAsync(token);
-    return payload;
+    try {
+      const payload: JwtPayload = await this.jwtService.verifyAsync(token);
+      console.log(token);
+      console.log(payload);
+      return payload;
+    } catch (error) {
+      if (error instanceof JsonWebTokenError) {
+        throw new UnauthorizedException('Invalid token');
+      } else {
+        throw error;
+      }
+    }
   }
 }

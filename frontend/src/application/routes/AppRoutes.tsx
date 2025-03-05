@@ -4,10 +4,29 @@ import RegisterPage from "../../presentation/pages/RegisterPage";
 import DashboardPage from "../../presentation/pages/DashboardPage";
 import { useAuth } from "../hooks/useAuth";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { useEffect, useState } from "react";
+import { User } from "../../domain/entities/User";
 
 const AppRoutes = () => {
   const navigate = useNavigate();
   const user = useAuth();
+  const [userData, setUserData] = useState<User | null>(null);
+
+  useEffect(() => {
+    if (user.isAuthenticated()) {
+      user
+        .fetchUserData(user.token || "")
+        .then((data) => {
+          if (data) {
+            setUserData(data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
+  }, [user]);
+
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/login" />} />
@@ -35,7 +54,17 @@ const AppRoutes = () => {
         path="dashboard"
         element={
           <ProtectedRoute user={user.isAuthenticated()}>
-            <DashboardPage onClick={() => user.logout()} />
+            <DashboardPage
+              onClick={() => user.logout()}
+              user={
+                userData || {
+                  name: "Pippo",
+                  surname: "Pippone",
+                  email: "pippo@pippo.com",
+                  password: "",
+                }
+              }
+            />
           </ProtectedRoute>
         }
       />

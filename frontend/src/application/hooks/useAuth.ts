@@ -4,23 +4,39 @@ import { UserRepistoryIml } from "../../infrastructure/repositories/UserReposito
 import { AuthenticateUser } from "../use-case/AuthenticateUser";
 import { RegisterUser } from "../use-case/RegisterUser";
 import { LogOutUser } from "../use-case/LogOutUser";
+import { GetUser } from "../use-case/GetUser";
+import { User } from "../../domain/entities/User";
 
 export const useAuth = () => {
   const userRepistory = new UserRepistoryIml();
   const authService = new AuthService(
     new AuthenticateUser(userRepistory),
     new RegisterUser(userRepistory),
-    new LogOutUser(userRepistory)
+    new LogOutUser(userRepistory),
+    new GetUser(userRepistory)
   );
 
   const [error, setError] = useState(null);
+  const [token, setToken] = useState<string | null>(null);
 
   const login = async (email: string, password: string): Promise<void> => {
     try {
-      await authService.login(email, password);
+      const response = await authService.login(email, password);
       setError(null);
+      setToken(response.authToken);
     } catch (err: any) {
       setError(err.message);
+    }
+  };
+
+  const fetchUserData = async (
+    authToken: string
+  ): Promise<User | undefined> => {
+    try {
+      return await authService.getUser(authToken);
+    } catch (err: any) {
+      setError(err.message);
+      return undefined;
     }
   };
 
@@ -53,8 +69,10 @@ export const useAuth = () => {
   };
 
   return {
+    token,
     error,
     login,
+    fetchUserData,
     logout,
     register,
     isAuthenticated,
