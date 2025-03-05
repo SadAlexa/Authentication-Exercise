@@ -35,7 +35,7 @@ const AppRoutes = () => {
         path="dashboard"
         element={
           <ProtectedRoute user={user.isAuthenticated()}>
-            <DashboardPage />
+            <DashboardPage onClick={() => user.logout()} />
           </ProtectedRoute>
         }
       />

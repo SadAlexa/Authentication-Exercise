@@ -1,16 +1,20 @@
 import { AuthenticateUser } from "../../application/use-case/AuthenticateUser";
+import { LogOutUser } from "../../application/use-case/LogOutUser";
 import { RegisterUser } from "../../application/use-case/RegisterUser";
 
 export class AuthService {
   private authenticateUserUseCase: AuthenticateUser;
   private registerUserUseCase: RegisterUser;
+  private logoutUserUseCase: LogOutUser;
 
   constructor(
     authenticateUserUseCase: AuthenticateUser,
-    registerUserUseCase: RegisterUser
+    registerUserUseCase: RegisterUser,
+    logoutUserUseCase: LogOutUser
   ) {
     this.authenticateUserUseCase = authenticateUserUseCase;
     this.registerUserUseCase = registerUserUseCase;
+    this.logoutUserUseCase = logoutUserUseCase;
   }
 
   async login(email: string, password: string): Promise<void> {
@@ -35,7 +39,7 @@ export class AuthService {
   }
 
   async logout(): Promise<void> {
-    await this.authenticateUserUseCase.execute("", "");
+    await this.logoutUserUseCase.execute();
   }
 
   isAuthenticated(): boolean {
@@ -44,9 +48,5 @@ export class AuthService {
       .find((c) => c.trim().startsWith("authToken="))
       ?.split("=")[1];
     return !!token;
-  }
-
-  private storeToken(accessToken: string): void {
-    document.cookie = `authToken=${accessToken}; path=/;`;
   }
 }

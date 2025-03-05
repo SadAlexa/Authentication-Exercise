@@ -32,9 +32,10 @@ export class UserController {
     return this.getUserUseCase.execute(getUserDto, res);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('/logout')
-  logoutUser(@Res() res: Response) {
-    this.logoutUserUseCase.execute(res);
+  logoutUser(@Res() res: Response): void {
+    return this.logoutUserUseCase.execute(res);
   }
 
   @HttpCode(HttpStatus.OK)

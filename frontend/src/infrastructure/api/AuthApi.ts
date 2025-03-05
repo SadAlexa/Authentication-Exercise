@@ -36,7 +36,7 @@ export class AuthApi {
   }
 
   async logout() {
-    const response = await fetch("http://localhost:3000//logout", {
+    const response = await fetch("http://localhost:3000/logout", {
       method: "POST",
       credentials: "include",
     });

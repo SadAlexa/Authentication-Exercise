@@ -3,12 +3,14 @@ import { AuthService } from "../../infrastructure/services/AuthService";
 import { UserRepistoryIml } from "../../infrastructure/repositories/UserRepositoryImpl";
 import { AuthenticateUser } from "../use-case/AuthenticateUser";
 import { RegisterUser } from "../use-case/RegisterUser";
+import { LogOutUser } from "../use-case/LogOutUser";
 
 export const useAuth = () => {
   const userRepistory = new UserRepistoryIml();
   const authService = new AuthService(
     new AuthenticateUser(userRepistory),
-    new RegisterUser(userRepistory)
+    new RegisterUser(userRepistory),
+    new LogOutUser(userRepistory)
   );
 
   const [error, setError] = useState(null);
