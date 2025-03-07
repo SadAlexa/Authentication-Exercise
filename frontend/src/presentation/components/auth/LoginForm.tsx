@@ -1,8 +1,8 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useAuth } from "../../../application/hooks/useAuth";
 import { loginSchema } from "../../../validation/LoginSchema";
 import Button from "../button/Button";
+import { useAuth } from "../../../application/context/AuthContext";
 
 const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const {
