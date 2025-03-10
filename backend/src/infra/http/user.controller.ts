@@ -53,7 +53,6 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('/profile')
   getProfile(@Req() req): Promise<User | undefined> {
-    console.log('getProfile', req.user);
-    return this.getUserUseCase.findById(req.user.id);
+    return this.getUserUseCase.findByEmail(req.user.email);
   }
 }

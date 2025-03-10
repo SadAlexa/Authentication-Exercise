@@ -7,7 +7,7 @@ export abstract class UserRepository {
     password: string,
   ): Promise<{ accessToken: string }>;
 
-  abstract findById(id: number): Promise<User | undefined>;
+  abstract findByEmail(email: string): Promise<User | undefined>;
   abstract verifyToken(token: string): Promise<any>;
 
   abstract logoutUser(): Promise<void>;

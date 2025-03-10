@@ -56,10 +56,9 @@ export class AuthService {
     await this.logoutUserUseCase.execute();
   }
 
-  async isAuthenticated(): Promise<boolean> {
-    const token = document.cookie
+  async isAuthenticated(): Promise<string | undefined> {
+    return document.cookie
       .split(";")
       .find((c) => c.trim().startsWith("authToken="));
-    return !!token;
   }
 }

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import { AuthService } from "../../infrastructure/services/AuthService";
 import { UserRepistoryIml } from "../../infrastructure/repositories/UserRepositoryImpl";
 import { AuthenticateUser } from "../use-case/AuthenticateUser";
@@ -7,47 +7,72 @@ import { LogOutUser } from "../use-case/LogOutUser";
 import { GetUser } from "../use-case/GetUser";
 import { User } from "../../domain/entities/User";
 
-const AuthContext = createContext({
-  login: (_email: string, _password: string): Promise<void> => {
-    return new Promise(() => {});
-  },
-  register: (
-    _name: string,
-    _surname: string,
-    _email: string,
-    _password: string
-  ): Promise<boolean> => {
-    return new Promise(() => {});
-  },
-  logout: (): Promise<void> => {
-    return new Promise(() => {});
-  },
+// const AuthContext = createContext({
+//   login: (_email: string, _password: string) => {},
+//   register: (
+//     _name: string,
+//     _surname: string,
+//     _email: string,
+//     _password: string
+//   ) => {
+//   },
+//   logout: () => {
+//   },
+//   userData: {
+//   } as User,
+//   isLoggedIn: false,
+//   token: "",
+//   error: null,
+//   loading: false,
+// });
 
-  userData: {
-    token: "",
-    name: "",
-    surname: "",
-    email: "",
-    password: "",
-  } as User,
+type LoginType = (email: string, password: string) => void;
+type RegisterType = (
+  name: string,
+  surname: string,
+  email: string,
+  password: string
+) => void;
+
+type LogoutType = () => void;
+
+type AuthContextType = {
+  login: LoginType;
+  register: RegisterType;
+  logout: LogoutType;
+  userData: User;
+  isLoggedIn: boolean;
+  token: string;
+  error: any;
+  loading: boolean;
+};
+
+const AuthContext = createContext<AuthContextType>({
+  login: () => {},
+  register: () => {},
+  logout: () => {},
+  userData: {} as User,
   isLoggedIn: false,
   token: "",
   error: null,
   loading: false,
 });
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const userRepistory = new UserRepistoryIml();
-  const authService = new AuthService(
-    new AuthenticateUser(userRepistory),
-    new RegisterUser(userRepistory),
-    new LogOutUser(userRepistory),
-    new GetUser(userRepistory)
-  );
+  const userRepistory = useMemo(() => new UserRepistoryIml(), []);
+  const authService = useMemo(() => {
+    return new AuthService(
+      new AuthenticateUser(userRepistory),
+      new RegisterUser(userRepistory),
+      new LogOutUser(userRepistory),
+      new GetUser(userRepistory)
+    );
+  }, [userRepistory]);
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [token, setToken] = useState<string | null>(null);
+  const [token, setToken] = useState<string>("");
   const [userData, setUserData] = useState<User>({
     token: "",
     name: "",
@@ -97,20 +122,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     authService.isAuthenticated().then((result) => {
-      setIsLoggedIn(result);
+      setIsLoggedIn(!!result);
+      setToken(result || "");
     });
-  }, []);
+  }, [authService]);
 
   useEffect(() => {
     const getUserData = async () => {
-      if (!token) {
+      if (token.length === 0) {
         return;
       }
       const data = await authService.getUser(token);
       setUserData(data!);
     };
     getUserData();
-  }, [token]);
+  }, [token, authService]);
 
   return (
     <AuthContext.Provider
@@ -119,7 +145,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         logout,
         register,
         isLoggedIn,
-        token: token ?? "",
+        token,
         userData,
         error,
         loading,

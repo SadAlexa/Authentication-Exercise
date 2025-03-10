@@ -25,14 +25,17 @@ export class UserRepositoryImpl implements UserRepository {
     @Inject(DB_INJECTION_KEY) private readonly db: DrizzleDatabase,
     private jwtService: JwtService,
   ) {}
-  async findById(id: number): Promise<User | undefined> {
+  async findByEmail(email: string): Promise<User | undefined> {
     const user = await this.db.query.usersTable.findFirst({
-      where: eq(usersTable.id, id),
+      where: eq(usersTable.email, email),
     });
+    if (!user) {
+      return undefined;
+    }
     return user ? UserMapper.toDomain(user) : undefined;
   }
   async logoutUser(): Promise<void> {
-    this.jwtService.signAsync('');
+    await this.jwtService.signAsync('');
   }
   async create(user: User) {
     const salt = Math.random().toString(36).substring(2, 15);
@@ -64,8 +67,6 @@ export class UserRepositoryImpl implements UserRepository {
   async verifyToken(token: string): Promise<JwtPayload> {
     try {
       const payload: JwtPayload = await this.jwtService.verifyAsync(token);
-      console.log(token);
-      console.log(payload);
       return payload;
     } catch (error) {
       if (error instanceof JsonWebTokenError) {

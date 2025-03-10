@@ -19,7 +19,12 @@ const RoutesComponents = () => {
 
   return (
     <Routes>
-      <Route path="/" element={<Navigate to="/login" />} />
+      <Route
+        path="/"
+        element={
+          isLoggedIn ? <Navigate to="/dashboard" /> : <Navigate to="/login" />
+        }
+      />
       <Route
         path="login"
         element={

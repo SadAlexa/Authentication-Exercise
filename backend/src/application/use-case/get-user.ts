@@ -23,7 +23,7 @@ export class GetUserUseCase {
     return res.status(HttpStatus.OK).json();
   }
 
-  async findById(id: number): Promise<User | undefined> {
-    return this.userRepository.findById(id);
+  async findByEmail(email: string): Promise<User | undefined> {
+    return await this.userRepository.findByEmail(email);
   }
 }
