@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { AuthService } from "../../infrastructure/services/AuthService";
 import { UserRepistoryIml } from "../../infrastructure/repositories/UserRepositoryImpl";
 import { AuthenticateUser } from "../use-case/AuthenticateUser";
@@ -22,12 +22,15 @@ const AuthContext = createContext({
   logout: (): Promise<void> => {
     return new Promise(() => {});
   },
-  fetchUserData: (_authToken: string): Promise<User | undefined> => {
-    return new Promise(() => {});
-  },
-  isAuthenticated: (): boolean => {
-    return false;
-  },
+
+  userData: {
+    token: "",
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+  } as User,
+  isLoggedIn: false,
   token: "",
   error: null,
   loading: false,
@@ -42,8 +45,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   );
 
   const [error, setError] = useState(null);
-  const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const [userData, setUserData] = useState<User>({
+    token: "",
+    name: "",
+    surname: "",
+    email: "",
+    password: "",
+  });
 
   const login = async (email: string, password: string): Promise<void> => {
     setLoading(true);
@@ -54,17 +65,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setLoading(false);
     } catch (err: any) {
       setError(err.message);
-    }
-  };
-
-  const fetchUserData = async (
-    authToken: string
-  ): Promise<User | undefined> => {
-    try {
-      return await authService.getUser(authToken);
-    } catch (err: any) {
-      setError(err.message);
-      return undefined;
     }
   };
 
@@ -95,9 +95,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const isAuthenticated = () => {
-    return authService.isAuthenticated();
-  };
+  useEffect(() => {
+    authService.isAuthenticated().then((result) => {
+      setIsLoggedIn(result);
+    });
+  }, []);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      if (!token) {
+        return;
+      }
+      const data = await authService.getUser(token);
+      setUserData(data!);
+    };
+    getUserData();
+  }, [token]);
 
   return (
     <AuthContext.Provider
@@ -105,9 +118,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         login,
         logout,
         register,
-        isAuthenticated,
-        fetchUserData,
+        isLoggedIn,
         token: token ?? "",
+        userData,
         error,
         loading,
       }}

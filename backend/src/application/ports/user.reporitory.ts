@@ -10,5 +10,5 @@ export abstract class UserRepository {
   abstract findById(id: number): Promise<User | undefined>;
   abstract verifyToken(token: string): Promise<any>;
 
-  abstract logoutUser(token: string): Promise<void>;
+  abstract logoutUser(): Promise<void>;
 }

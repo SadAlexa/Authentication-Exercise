@@ -40,8 +40,8 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/logout')
-  logoutUser(@Res() res: Response): Promise<void> {
-    return this.logoutUserUseCase.execute(res);
+  logoutUser(): Promise<void> {
+    return this.logoutUserUseCase.execute();
   }
 
   @HttpCode(HttpStatus.OK)
@@ -50,9 +50,10 @@ export class UserController {
     return this.createUserUseCase.execute(createUserDto);
   }
 
-  @Get('/profile')
   @UseGuards(AuthGuard)
-  async getProfile(@Req() req): Promise<User | undefined> {
+  @Get('/profile')
+  getProfile(@Req() req): Promise<User | undefined> {
+    console.log('getProfile', req.user);
     return this.getUserUseCase.findById(req.user.id);
   }
 }

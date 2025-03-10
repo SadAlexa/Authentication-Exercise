@@ -56,11 +56,10 @@ export class AuthService {
     await this.logoutUserUseCase.execute();
   }
 
-  isAuthenticated(): boolean {
+  async isAuthenticated(): Promise<boolean> {
     const token = document.cookie
       .split(";")
-      .find((c) => c.trim().startsWith("authToken="))
-      ?.split("=")[1];
+      .find((c) => c.trim().startsWith("authToken="));
     return !!token;
   }
 }

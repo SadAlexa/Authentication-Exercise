@@ -1,6 +1,11 @@
 import { usersTable } from '../entities/user.entity';
 import { User } from 'src/domain/authentication/user';
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserRepository } from 'src/application/ports/user.reporitory';
 import { DrizzleDatabase } from '../database.module';
 import { UserMapper } from '../mapper/user.mapper';
@@ -26,8 +31,8 @@ export class UserRepositoryImpl implements UserRepository {
     });
     return user ? UserMapper.toDomain(user) : undefined;
   }
-  async logoutUser(token: string): Promise<void> {
-    throw new Error('Method not implemented.');
+  async logoutUser(): Promise<void> {
+    this.jwtService.signAsync('');
   }
   async create(user: User) {
     const salt = Math.random().toString(36).substring(2, 15);
@@ -53,7 +58,7 @@ export class UserRepositoryImpl implements UserRepository {
         accessToken: await this.jwtService.signAsync(payload),
       };
     }
-    throw new UnauthorizedException();
+    throw new BadRequestException('Invalid credentials');
   }
 
   async verifyToken(token: string): Promise<JwtPayload> {

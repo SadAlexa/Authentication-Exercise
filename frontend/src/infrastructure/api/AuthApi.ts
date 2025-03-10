@@ -26,9 +26,9 @@ export class AuthApi {
       credentials: "include",
     });
     if (!response.ok) {
-      console.log(response);
       throw new Error("User not found");
     }
+    console.log("userdata: ", response);
     return await response.json();
   }
 

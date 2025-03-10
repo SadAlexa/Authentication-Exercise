@@ -5,6 +5,6 @@ export class GetUser {
   constructor(private userRepository: UserRepistory) {}
 
   async execute(authToken: string): Promise<User | undefined> {
-    return this.userRepository.fethUserData(authToken);
+    return this.userRepository.getUser(authToken);
   }
 }

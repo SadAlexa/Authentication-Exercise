@@ -7,7 +7,7 @@ export class LogoutUseCase {
   constructor(
     @Inject(UserRepository) private readonly userRepository: UserRepository,
   ) {}
-  async execute(res: Response): Promise<void> {
-    await this.userRepository.logoutUser(res.cookie['authToken']);
+  async execute(): Promise<void> {
+    await this.userRepository.logoutUser();
   }
 }

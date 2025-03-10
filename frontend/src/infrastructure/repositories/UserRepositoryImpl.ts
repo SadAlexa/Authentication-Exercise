@@ -8,7 +8,8 @@ export class UserRepistoryIml implements UserRepistory {
   constructor() {
     this.authApi = new AuthApi();
   }
-  async fethUserData(authToken: string): Promise<User | undefined> {
+
+  async getUser(authToken: string): Promise<User | undefined> {
     return this.authApi.fethUserData(authToken);
   }
   async logout(): Promise<void> {
