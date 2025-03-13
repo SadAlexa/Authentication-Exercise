@@ -1,4 +1,5 @@
 import { User } from 'src/domain/authentication/user';
+import { Response } from 'express';
 
 export abstract class UserRepository {
   abstract create(user: User): Promise<void>;
@@ -10,5 +11,5 @@ export abstract class UserRepository {
   abstract findByEmail(email: string): Promise<User | undefined>;
   abstract verifyToken(token: string): Promise<any>;
 
-  abstract logoutUser(): Promise<void>;
+  abstract logoutUser(res: Response): Promise<void>;
 }

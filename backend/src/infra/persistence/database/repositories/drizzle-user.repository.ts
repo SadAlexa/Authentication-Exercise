@@ -2,6 +2,7 @@ import { usersTable } from '../entities/user.entity';
 import { User } from 'src/domain/authentication/user';
 import {
   BadRequestException,
+  HttpStatus,
   Inject,
   Injectable,
   UnauthorizedException,
@@ -13,6 +14,7 @@ import { DB_INJECTION_KEY } from '../../utils';
 import * as bcrypt from 'bcrypt';
 import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import { eq } from 'drizzle-orm';
+import { Response } from 'express';
 
 interface JwtPayload {
   email: string;
@@ -34,8 +36,9 @@ export class UserRepositoryImpl implements UserRepository {
     }
     return user ? UserMapper.toDomain(user) : undefined;
   }
-  async logoutUser(): Promise<void> {
-    await this.jwtService.signAsync('');
+  async logoutUser(res: Response): Promise<void> {
+    res.clearCookie('authToken');
+    res.status(HttpStatus.OK).send();
   }
   async create(user: User) {
     const salt = Math.random().toString(36).substring(2, 15);

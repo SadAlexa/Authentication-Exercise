@@ -4,6 +4,11 @@ import { GetUserDto } from 'src/infra/http/dto/get.user.dto';
 import { Response } from 'express';
 import { User } from 'src/domain/authentication/user';
 
+interface GetUserCommand {
+  email: string;
+  password: string;
+}
+
 @Injectable()
 export class GetUserUseCase {
   constructor(
@@ -11,12 +16,12 @@ export class GetUserUseCase {
   ) {}
 
   async findByEmailAndPassword(
-    getUserDto: GetUserDto,
+    { email, password }: GetUserCommand,
     res: Response,
   ): Promise<Response> {
     const data = await this.userRepository.findByEmailAndPassword(
-      getUserDto.email,
-      getUserDto.password,
+      email,
+      password,
     );
     res.cookie('authToken', data.accessToken);
 

@@ -40,8 +40,8 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Post('/logout')
-  logoutUser(): Promise<void> {
-    return this.logoutUserUseCase.execute();
+  logoutUser(@Res() res: Response): Promise<void> {
+    return this.logoutUserUseCase.execute(res);
   }
 
   @HttpCode(HttpStatus.OK)

@@ -1,4 +1,3 @@
-import { unique } from 'drizzle-orm/mysql-core';
 import { serial, date, pgTable, text, varchar } from 'drizzle-orm/pg-core';
 
 export type UserEntity = typeof usersTable;
