@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { loginSchema } from "../../../validation/LoginSchema";
 import Button from "../button/Button";
-import { useAuth } from "../../../application/context/AuthContext";
+import { useAuth } from "../../../application/hooks/UseAuth";
 
 const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const {
@@ -30,7 +30,7 @@ const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="text"
           placeholder="Email"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("email")}
         />
         <p className="text-red-600">{errors.email?.message}</p>
@@ -40,7 +40,7 @@ const LoginForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="password"
           placeholder="Password"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("password")}
         />
         <p className="text-red-600">{errors.password?.message}</p>

@@ -2,7 +2,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { registerSchema } from "../../../validation/RegisterSchema";
 import Button from "../button/Button";
-import { useAuth } from "../../../application/context/AuthContext";
+import { useAuth } from "../../../application/hooks/UseAuth";
 
 const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
   const {
@@ -46,7 +46,7 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="text"
           placeholder="Name"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("name")}
         />
         <p className="text-red-600">{errors.name?.message}</p>
@@ -56,7 +56,7 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="text"
           placeholder="Surname"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("surname")}
         />
         <p className="text-red-600">{errors.surname?.message}</p>
@@ -66,7 +66,7 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="text"
           placeholder="Email"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("email")}
         />
         <p className="text-red-600">{errors.email?.message}</p>
@@ -76,7 +76,7 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="date"
           placeholder="Date of birth"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("dateOfBirth")}
         />
         <p className="text-red-600">{errors.dateOfBirth?.message}</p>
@@ -86,7 +86,7 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="image"
           placeholder="Image"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("image")}
         />
         <p className="text-red-600">{errors.image?.message}</p>
@@ -96,7 +96,7 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="password"
           placeholder="Password"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("password")}
         />
         <p className="text-red-600">{errors.password?.message}</p>
@@ -106,7 +106,7 @@ const RegisterForm = ({ onSuccess }: { onSuccess: () => void }) => {
         <input
           type="password"
           placeholder="Confirm password"
-          className="block w-full px-4 py-2 border rounded"
+          className="flex min-w-[250px] px-4 py-2 border rounded"
           {...register("confirmPassword")}
         />
         <p className="text-red-600">{errors.confirmPassword?.message}</p>

@@ -2,8 +2,10 @@ import { Navigate, Route, Routes, useNavigate } from "react-router";
 import LoginPage from "../../presentation/pages/LoginPage";
 import RegisterPage from "../../presentation/pages/RegisterPage";
 import DashboardPage from "../../presentation/pages/DashboardPage";
-import { AuthProvider, useAuth } from "../context/AuthContext";
+import { AuthProvider } from "../context/AuthContext";
 import { ProtectedRoute } from "./ProtectedRoute";
+import { useAuth } from "../hooks/UseAuth";
+import { useEffect } from "react";
 
 const AppRoutes = () => {
   return (
@@ -15,8 +17,15 @@ const AppRoutes = () => {
 
 const RoutesComponents = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, userData, logout } = useAuth();
-
+  const { isLoggedIn, userData, logout, loading } = useAuth();
+  console.log(loading);
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/dashboard");
+    } else {
+      navigate("/login");
+    }
+  }, [isLoggedIn]);
   return (
     <Routes>
       <Route

@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useEffect, useMemo, useState } from "react";
 import { AuthService } from "../../infrastructure/services/AuthService";
 import { UserRepistoryIml } from "../../infrastructure/repositories/UserRepositoryImpl";
 import { AuthenticateUser } from "../use-case/AuthenticateUser";
@@ -7,34 +7,15 @@ import { LogOutUser } from "../use-case/LogOutUser";
 import { GetUser } from "../use-case/GetUser";
 import { User } from "../../domain/entities/User";
 
-// const AuthContext = createContext({
-//   login: (_email: string, _password: string) => {},
-//   register: (
-//     _name: string,
-//     _surname: string,
-//     _email: string,
-//     _password: string
-//   ) => {
-//   },
-//   logout: () => {
-//   },
-//   userData: {
-//   } as User,
-//   isLoggedIn: false,
-//   token: "",
-//   error: null,
-//   loading: false,
-// });
-
-type LoginType = (email: string, password: string) => void;
+type LoginType = (email: string, password: string) => Promise<void>;
 type RegisterType = (
   name: string,
   surname: string,
   email: string,
   password: string
-) => void;
+) => Promise<boolean>;
 
-type LogoutType = () => void;
+type LogoutType = () => Promise<void>;
 
 type AuthContextType = {
   login: LoginType;
@@ -47,10 +28,12 @@ type AuthContextType = {
   loading: boolean;
 };
 
-const AuthContext = createContext<AuthContextType>({
-  login: () => {},
-  register: () => {},
-  logout: () => {},
+export const AuthContext = createContext<AuthContextType>({
+  login: async () => {},
+  register: async () => {
+    return false;
+  },
+  logout: async () => {},
   userData: {} as User,
   isLoggedIn: false,
   token: "",
@@ -121,11 +104,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    authService.isAuthenticated().then((result) => {
+    const checkAuth = async () => {
+      const result = await authService.isAuthenticated();
       setIsLoggedIn(!!result);
       setToken(result || "");
-    });
-  }, [authService]);
+    };
+    checkAuth();
+  }, [authService.isAuthenticated()]);
 
   useEffect(() => {
     const getUserData = async () => {
@@ -136,7 +121,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setUserData(data!);
     };
     getUserData();
-  }, [token, authService]);
+  }, [token]);
 
   return (
     <AuthContext.Provider
@@ -154,8 +139,4 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       {children}
     </AuthContext.Provider>
   );
-};
-
-export const useAuth = () => {
-  return useContext(AuthContext);
 };
